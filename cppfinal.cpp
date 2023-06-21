@@ -129,7 +129,7 @@ void getHelp()
     cout << "*                      Commands syntaxes                      *" << endl;
     cout << "--------------------------------------------------------------" << endl;
     cout << "     itemadd <item_id> <item_name> <quantity> <registration_date>" << endl;
-    cout << "      itemslist" << endl;
+    cout << "     itemslist" << endl;
 };
 
 int main()
@@ -167,6 +167,10 @@ int main()
     if (commandOptions.at(0) == "itemslist")
     {
         listItems();
+    }
+    if (commandOptions.at(0) == "help")
+    {
+        getHelp();
     }
 
     return 0;
