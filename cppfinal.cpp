@@ -72,6 +72,61 @@ void addItem(string id, string name, string quantity, string date)
         cout << "Failed to open file" << endl;
     }
 };
+
+struct InventoryItem
+{
+    string id;
+    string name;
+    string quantity;
+    string date;
+};
+bool sortingAlgorithm(InventoryItem &item1, InventoryItem &item2)
+{
+    return item1.name < item2.name;
+}
+void listItems()
+{
+    ifstream file("inventory.csv");
+    string line;
+    string data;
+    vector<InventoryItem> inventoryItems;
+
+    vector<string> row;
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            stringstream datastream(line);
+            while (getline(datastream, data, ','))
+            {
+                row.push_back(data);
+            }
+            if (row.size() == 4)
+            {
+                InventoryItem item;
+                item.id = row[0];
+                item.name = row[1];
+                item.quantity = row[2];
+                item.date = row[3];
+                inventoryItems.push_back(item);
+            }
+        }
+    }
+    else
+    {
+        cout << "Failed to open file" << endl;
+    }
+    sort(inventoryItems.begin(), inventoryItems.end(), sortingAlgorithm);
+
+    for (const auto &item : inventoryItems)
+    {
+        cout << "Item ID: " << item.id << "                ";
+        cout << "Item Name: " << item.name << "              ";
+        cout << "Quantity: " << item.quantity << "               ";
+        cout << "RegDate: " << item.date << endl;
+    }
+};
+
 int main()
 {
     string userRequest;
@@ -104,4 +159,10 @@ int main()
             cout << "Invalid command" << endl;
         }
     }
+    if (commandOptions.at(0) == "itemslist")
+    {
+        listItems();
+    }
+
+    return 0;
 }
