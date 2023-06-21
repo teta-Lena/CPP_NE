@@ -9,6 +9,14 @@
 
 using namespace std;
 
+struct InventoryItem
+{
+    string id;
+    string name;
+    string quantity;
+    string date;
+};
+
 void getStarted()
 {
     cout << "" << endl;
@@ -37,12 +45,12 @@ string toLower(string &text)
     }
     return texttolower;
 }
-vector<string> split(string userRequest)
+vector<string> split(string userRequest, char delimiter)
 {
     stringstream lineBuffer(userRequest);
     string option;
     vector<string> options;
-    while (getline(lineBuffer, option, ' '))
+    while (getline(lineBuffer, option, delimiter))
     {
         options.push_back(option);
     }
@@ -71,15 +79,10 @@ void addItem(string id, string name, string quantity, string date)
     {
         cout << "Failed to open file" << endl;
     }
+
+    file.close();
 };
 
-struct InventoryItem
-{
-    string id;
-    string name;
-    string quantity;
-    string date;
-};
 bool sortingAlgorithm(InventoryItem &item1, InventoryItem &item2)
 {
     return item1.name < item2.name;
@@ -96,20 +99,14 @@ void listItems()
     {
         while (getline(file, line))
         {
-            stringstream datastream(line);
-            while (getline(datastream, data, ','))
-            {
-                row.push_back(data);
-            }
-            if (row.size() == 4)
-            {
-                InventoryItem item;
-                item.id = row[0];
-                item.name = row[1];
-                item.quantity = row[2];
-                item.date = row[3];
-                inventoryItems.push_back(item);
-            }
+            vector<string> row = split(line, ',');
+            cout << row[1] << endl;
+            InventoryItem item;
+            item.id = row[0];
+            item.name = row[1];
+            item.quantity = row[2];
+            item.date = row[3];
+            inventoryItems.push_back(item);
         }
     }
     else
@@ -117,14 +114,22 @@ void listItems()
         cout << "Failed to open file" << endl;
     }
     sort(inventoryItems.begin(), inventoryItems.end(), sortingAlgorithm);
-
+    cout << "here" << endl;
     for (const auto &item : inventoryItems)
     {
-        cout << "Item ID: " << item.id << "                ";
-        cout << "Item Name: " << item.name << "              ";
-        cout << "Quantity: " << item.quantity << "               ";
-        cout << "RegDate: " << item.date << endl;
+        cout << "Item ID: " << item.id << "                         Item Name: " << item.name << "                       Quantity: " << item.quantity << "                   RegDate: " << item.date << endl;
     }
+    file.close();
+};
+
+void getHelp()
+{
+    cout << "" << endl;
+    cout << "--------------------------------------------------------------" << endl;
+    cout << "*                      Commands syntaxes                      *" << endl;
+    cout << "--------------------------------------------------------------" << endl;
+    cout << "     itemadd <item_id> <item_name> <quantity> <registration_date>" << endl;
+    cout << "      itemslist" << endl;
 };
 
 int main()
@@ -138,7 +143,7 @@ int main()
     getline(cin, userRequest);
 
     userRequest_toLower = toLower(userRequest);
-    vector<string> commandOptions = split(userRequest_toLower);
+    vector<string> commandOptions = split(userRequest_toLower, ' ');
 
     if (commandOptions.at(0) == "additem")
     {
