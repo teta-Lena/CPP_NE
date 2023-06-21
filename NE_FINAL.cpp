@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// structure used to store our inventory object
 struct InventoryItem
 {
     string id;
@@ -17,6 +18,7 @@ struct InventoryItem
     string date;
 };
 
+// screen displayed on startup
 void getStarted()
 {
     cout << "" << endl;
@@ -27,15 +29,19 @@ void getStarted()
     cout << "Enter 'Exit' to log out of the application" << endl;
     cout << "" << endl;
 };
-string toUpper(string &text)
-{
-    string texttoupper = text;
-    for (char &c : texttoupper)
-    {
-        c = toupper(c);
-    }
-    return texttoupper;
-}
+
+// to upper case when needed
+//  string toUpper(string &text)
+//  {
+//      string texttoupper = text;
+//      for (char &c : texttoupper)
+//      {
+//          c = toupper(c);
+//      }
+//      return texttoupper;
+//  }
+
+// to lower case to disable case-sensitivity
 string toLower(string &text)
 {
     string texttolower = text;
@@ -45,6 +51,7 @@ string toLower(string &text)
     }
     return texttolower;
 }
+// split string based on a certian delimiter
 vector<string> split(string userRequest, char delimiter)
 {
     stringstream lineBuffer(userRequest);
@@ -57,6 +64,7 @@ vector<string> split(string userRequest, char delimiter)
 
     return options;
 }
+// check if itemadd is valid
 bool isAddItemCommandValid(vector<string> commandOptions)
 {
     if (commandOptions.size() == 5)
@@ -65,6 +73,7 @@ bool isAddItemCommandValid(vector<string> commandOptions)
     }
     return false;
 }
+// add item function
 void addItem(string id, string name, string quantity, string date)
 {
     ofstream file;
@@ -83,10 +92,12 @@ void addItem(string id, string name, string quantity, string date)
     file.close();
 };
 
-// bool sortingAlgorithm(InventoryItem &item1, InventoryItem &item2)
-// {
-//     return item1.name < item2.name;
-// }
+// sorting algorithm
+bool sortingAlgorithm(InventoryItem &item1, InventoryItem &item2)
+{
+    return item1.name < item2.name;
+}
+// list all items
 void listItems()
 {
     ifstream file("inventory.csv");
@@ -112,7 +123,7 @@ void listItems()
     {
         cout << "Failed to open file" << endl;
     }
-    // sort(inventoryItems.begin(), inventoryItems.end(), sortingAlgorithm);
+    sort(inventoryItems.begin(), inventoryItems.end(), sortingAlgorithm);
     for (const auto &item : inventoryItems)
     {
         cout << "Item ID: " << item.id << "                         Item Name: " << item.name << "                       Quantity: " << item.quantity << "                   RegDate: " << item.date << endl;
@@ -120,6 +131,7 @@ void listItems()
     file.close();
 };
 
+// help menu
 void getHelp()
 {
     cout << "" << endl;
